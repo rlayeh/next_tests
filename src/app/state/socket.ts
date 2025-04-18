@@ -1,5 +1,11 @@
-import { io } from "socket.io-client";
+"use client";
 
-const socket = io();
+import { io, Socket } from "socket.io-client";
 
-export default socket;
+let socket: Socket | undefined;
+
+if (typeof window !== "undefined") {
+  socket = io();
+}
+
+export default socket as Socket;

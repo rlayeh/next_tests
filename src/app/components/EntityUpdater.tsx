@@ -3,16 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { Entity } from "../state/entities";
 import socket from "../state/socket";
-import EntityTable from "./EntityTable";
-import EntityDashboardHeader from "./EntityDashboardHeader";
-import StatusSummary from "./StatusSummary";
 
-interface EntityListProps {
+interface EntityUpdaterProps {
   initialEntities: Entity[];
+  children: (entities: Entity[]) => React.ReactNode;
 }
 
-const EntityList: React.FC<EntityListProps> = ({ initialEntities }) => {
+const EntityUpdater: React.FC<EntityUpdaterProps> = ({
+  initialEntities,
+  children,
+}) => {
   const [entities, setEntities] = useState<Entity[]>(initialEntities);
+
+  useEffect(() => {
+    setEntities(initialEntities);
+  }, [initialEntities]);
 
   useEffect(() => {
     const handleStatusUpdate = (updatedEntity: {
@@ -35,13 +40,7 @@ const EntityList: React.FC<EntityListProps> = ({ initialEntities }) => {
     };
   }, []);
 
-  return (
-    <div className="container mx-auto p-4">
-      <EntityDashboardHeader />
-      <StatusSummary entities={entities} />
-      <EntityTable entities={entities} />
-    </div>
-  );
+  return <>{children(entities)}</>;
 };
 
-export default EntityList;
+export default EntityUpdater;

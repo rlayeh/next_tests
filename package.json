@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.74.4",
     "jotai": "^2.12.3",
     "next": "15.3.0",
     "react": "^19.0.0",

@@ -1,6 +1,6 @@
 import React from "react";
 
-type StatusType = "active" | "inactive" | "pending";
+export type StatusType = "active" | "inactive" | "pending";
 
 interface StatusBadgeProps {
   status: StatusType;
