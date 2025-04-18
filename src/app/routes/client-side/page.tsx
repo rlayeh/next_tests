@@ -2,10 +2,14 @@
 
 import React from "react";
 import EntityList from "../../components/EntityList";
-import { useEntities } from "../../hooks/useEntities";
+import { useClientFetch } from "../../hooks/useClientFetch";
+import { Entity } from "../../state/entities";
 
 const ClientSidePage: React.FC = () => {
-  const { entities, isLoading, isError } = useEntities();
+  const { data, isLoading, error } = useClientFetch<{ entities: Entity[] }>(
+    "/api/entities"
+  );
+  const isError = !!error;
 
   if (isLoading) {
     return (
@@ -44,7 +48,7 @@ const ClientSidePage: React.FC = () => {
         </div>
       </div>
 
-      <EntityList initialEntities={entities} />
+      <EntityList initialEntities={data?.entities || []} />
     </div>
   );
 };

@@ -1,22 +1,20 @@
 import ServerEntityList from "../../components/ServerEntityList";
 import { Entity } from "../../state/entities";
+import { fetcher } from "../../utils/fetcher";
 
 export default async function ServerSidePage() {
-  const response = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
-    }/api/entities`,
-    {
-      cache: "no-store",
-    }
-  );
+  const apiUrl = `${
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+  }/api/entities`;
+  const response = await fetcher<{ entities: Entity[] }>(apiUrl, {
+    cache: "no-store",
+  });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch entities");
+  if (response.error) {
+    throw response.error;
   }
 
-  const data = await response.json();
-  const entities = data.entities as Entity[];
+  const entities = response.data?.entities || [];
 
   return (
     <div className="min-h-screen bg-gray-50 py-4">

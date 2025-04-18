@@ -1,23 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Entity } from "../state/entities";
+import React, { useEffect } from "react";
+import { useAtom } from "jotai";
+import { Entity, entitiesAtom } from "../state/entities";
 import socket from "../state/socket";
+import EntityTable from "./EntityTable";
+import StatusSummary from "./StatusSummary";
 
 interface EntityUpdaterProps {
   initialEntities: Entity[];
-  children: (entities: Entity[]) => React.ReactNode;
+  showStatusSummary?: boolean;
 }
 
 const EntityUpdater: React.FC<EntityUpdaterProps> = ({
   initialEntities,
-  children,
+  showStatusSummary = true,
 }) => {
-  const [entities, setEntities] = useState<Entity[]>(initialEntities);
+  const [entities, setEntities] = useAtom(entitiesAtom);
 
   useEffect(() => {
     setEntities(initialEntities);
-  }, [initialEntities]);
+  }, [initialEntities, setEntities]);
 
   useEffect(() => {
     const handleStatusUpdate = (updatedEntity: {
@@ -38,9 +41,14 @@ const EntityUpdater: React.FC<EntityUpdaterProps> = ({
     return () => {
       socket.off("entityStatusChanged", handleStatusUpdate);
     };
-  }, []);
+  }, [setEntities]);
 
-  return <>{children(entities)}</>;
+  return (
+    <>
+      {showStatusSummary && <StatusSummary entities={entities} />}
+      <EntityTable entities={entities} />
+    </>
+  );
 };
 
 export default EntityUpdater;

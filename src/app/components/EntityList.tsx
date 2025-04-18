@@ -1,45 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Entity } from "../state/entities";
-import socket from "../state/socket";
-import EntityTable from "./EntityTable";
 import EntityDashboardHeader from "./EntityDashboardHeader";
-import StatusSummary from "./StatusSummary";
+import EntityUpdater from "./EntityUpdater";
 
 interface EntityListProps {
   initialEntities: Entity[];
 }
 
 const EntityList: React.FC<EntityListProps> = ({ initialEntities }) => {
-  const [entities, setEntities] = useState<Entity[]>(initialEntities);
-
-  useEffect(() => {
-    const handleStatusUpdate = (updatedEntity: {
-      id: number;
-      status: "active" | "inactive" | "pending";
-    }) => {
-      setEntities((prevEntities) =>
-        prevEntities.map((entity) =>
-          entity.id === updatedEntity.id
-            ? { ...entity, status: updatedEntity.status }
-            : entity
-        )
-      );
-    };
-
-    socket.on("entityStatusChanged", handleStatusUpdate);
-
-    return () => {
-      socket.off("entityStatusChanged", handleStatusUpdate);
-    };
-  }, []);
-
   return (
     <div className="container mx-auto p-4">
       <EntityDashboardHeader />
-      <StatusSummary entities={entities} />
-      <EntityTable entities={entities} />
+      <EntityUpdater initialEntities={initialEntities} />
     </div>
   );
 };
