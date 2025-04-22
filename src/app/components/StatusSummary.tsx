@@ -1,20 +1,15 @@
 import React from "react";
-import { Entity } from "../state/entities";
+import { useAtomValue } from "jotai";
+import {
+  activeEntitiesAtom,
+  inactiveEntitiesAtom,
+  pendingEntitiesAtom,
+} from "../state/entities";
 
-interface StatusSummaryProps {
-  entities: Entity[];
-}
-
-const StatusSummary: React.FC<StatusSummaryProps> = ({ entities }) => {
-  const activeEntities = entities.filter(
-    (entity) => entity.status === "active"
-  );
-  const inactiveEntities = entities.filter(
-    (entity) => entity.status === "inactive"
-  );
-  const pendingEntities = entities.filter(
-    (entity) => entity.status === "pending"
-  );
+const StatusSummary: React.FC = () => {
+  const activeEntities = useAtomValue(activeEntitiesAtom);
+  const inactiveEntities = useAtomValue(inactiveEntitiesAtom);
+  const pendingEntities = useAtomValue(pendingEntitiesAtom);
 
   return (
     <div className="mb-8">

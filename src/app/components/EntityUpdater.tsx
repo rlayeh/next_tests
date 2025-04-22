@@ -1,26 +1,23 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useAtom } from "jotai";
-import { Entity, entitiesAtom } from "../state/entities";
+import { useSetAtom } from "jotai";
+import { entitiesAtom, Entity } from "../state/entities";
 import socket from "../state/socket";
 import EntityTable from "./EntityTable";
 import StatusSummary from "./StatusSummary";
+import { useHydrateAtoms } from "jotai/utils";
 
-interface EntityUpdaterProps {
+interface IEntityUpdaterProps {
   initialEntities: Entity[];
-  showStatusSummary?: boolean;
 }
 
-const EntityUpdater: React.FC<EntityUpdaterProps> = ({
+const EntityUpdater: React.FC<IEntityUpdaterProps> = ({
   initialEntities,
-  showStatusSummary = true,
-}) => {
-  const [entities, setEntities] = useAtom(entitiesAtom);
+}: IEntityUpdaterProps) => {
+  const setEntities = useSetAtom(entitiesAtom);
 
-  useEffect(() => {
-    setEntities(initialEntities);
-  }, [initialEntities, setEntities]);
+  useHydrateAtoms([[entitiesAtom, initialEntities]]);
 
   useEffect(() => {
     const handleStatusUpdate = (updatedEntity: {
@@ -45,8 +42,8 @@ const EntityUpdater: React.FC<EntityUpdaterProps> = ({
 
   return (
     <>
-      {showStatusSummary && <StatusSummary entities={entities} />}
-      <EntityTable entities={entities} />
+      <StatusSummary />
+      <EntityTable />
     </>
   );
 };

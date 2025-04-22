@@ -1,12 +1,11 @@
 import React from "react";
-import { Entity } from "../state/entities";
+import { entitiesAtom } from "../state/entities";
 import StatusBadge from "./StatusBadge";
+import { useAtomValue } from "jotai";
 
-interface EntityTableProps {
-  entities: Entity[];
-}
+const EntityTable: React.FC = () => {
+  const entities = useAtomValue(entitiesAtom);
 
-const EntityTable: React.FC<EntityTableProps> = ({ entities }) => {
   return (
     <div className="bg-white shadow overflow-hidden rounded-lg">
       <table className="min-w-full divide-y divide-gray-200">
